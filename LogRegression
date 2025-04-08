@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Step 1: Data (Hours studied vs Pass/Fail)
+X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])  # Hours
+y = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])                      # 0 = fail, 1 = pass
+
+# Step 2: Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 3: Train Model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Step 4: Predict
+y_pred = model.predict(X_test)
+y_prob = model.predict_proba(X_test)
+
+# Step 5: Evaluate
+print("Predicted classes:", y_pred)
+print("Probabilities:\n", y_prob)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+# Step 6: Visualize
+x_range = np.linspace(0, 11, 100).reshape(-1, 1)
+y_range_prob = model.predict_proba(x_range)[:, 1]
+
+plt.scatter(X, y, color='black', label='Data')
+plt.plot(x_range, y_range_prob, color='blue', label='Logistic Curve')
+plt.axhline(0.5, color='red', linestyle='--', label='Decision Threshold (0.5)')
+plt.xlabel("Hours Studied")
+plt.ylabel("Probability of Passing")
+plt.title("Logistic Regression Example")
+plt.legend()
+plt.show()
