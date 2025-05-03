@@ -1,0 +1,35 @@
+import tensorflow as tf
+import numpy as np
+
+# Data: AND gate (linearly separable)
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+], dtype=np.float32)
+
+y = np.array([
+    [0],
+    [0],
+    [0],
+    [1]
+], dtype=np.float32)
+
+# Build model: single dense layer with step-like activation
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_shape=(2,), activation='sigmoid')
+])
+
+# Compile model
+model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.1),
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+# Train model
+model.fit(X, y, epochs=100, verbose=0)
+
+# Evaluate predictions
+predictions = model.predict(X)
+for i, pred in enumerate(predictions):
+    print(f"Input: {X[i]}, Prediction (prob): {pred[0]:.4f}, Class: {int(pred[0] >= 0.5)}")
